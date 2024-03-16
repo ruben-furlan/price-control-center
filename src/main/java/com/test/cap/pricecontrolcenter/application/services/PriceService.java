@@ -11,8 +11,18 @@ public class PriceService implements PriceUserCase {
 
     @Override
     public PriceModel create(PriceCommand command) {
+        PriceModel priceModel = PriceModel.builder()
+                .brandId(command.brandId())
+                .startDate(command.startDate())
+                .endDate(command.endDate())
+                .priceList(command.priceList())
+                .productId(command.productId())
+                .priority(command.priority())
+                .price(command.price())
+                .currency(command.currency())
+                .build();
 
-        return null;
+        return this.priceRepositoryPort.save(priceModel);
     }
 
 }

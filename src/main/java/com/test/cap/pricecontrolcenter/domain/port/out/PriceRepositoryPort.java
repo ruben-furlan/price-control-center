@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface PriceRepositoryPort {
 
-    PriceModel save(PriceModel task);
+    PriceModel save(PriceModel price);
 
     Optional<PriceModel> findById(PriceModel id);
 
     List<PriceModel> findAll();
 
-    Optional<PriceModel> update(PriceModel task);
+    Optional<PriceModel> update(PriceModel price);
 
     boolean deleteById(Long id);
 

@@ -1,4 +1,4 @@
-package com.test.cap.pricecontrolcenter.infraestructure.out.entity;
+package com.test.cap.pricecontrolcenter.infraestructure.adapter.out.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
