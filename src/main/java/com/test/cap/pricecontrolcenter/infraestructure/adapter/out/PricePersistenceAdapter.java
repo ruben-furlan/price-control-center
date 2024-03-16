@@ -1,11 +1,12 @@
-package com.test.cap.pricecontrolcenter.infraestructure.out.adapter;
+package com.test.cap.pricecontrolcenter.infraestructure.adapter.out;
 
 import com.test.cap.pricecontrolcenter.common.PersistenceAdapter;
 import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.test.cap.pricecontrolcenter.domain.port.out.PriceRepositoryPort;
-import com.test.cap.pricecontrolcenter.infraestructure.out.entity.PricesEntity;
-import com.test.cap.pricecontrolcenter.infraestructure.out.mapper.PriceMapper;
-import com.test.cap.pricecontrolcenter.infraestructure.out.repositorty.SpringDataJpaPrice;
+
+import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
+import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.mapper.PriceMapper ;
+import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.repositorty.SpringDataJpaPrice;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 @PersistenceAdapter
 @RequiredArgsConstructor
 public class PricePersistenceAdapter implements PriceRepositoryPort {
-    private SpringDataJpaPrice springDataJpaPrice;
-    private PriceMapper priceMapper;
+    private final SpringDataJpaPrice springDataJpaPrice;
+    private final PriceMapper priceMapper;
 
     @Override
     public PriceModel save(PriceModel task) {
