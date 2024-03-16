@@ -16,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 @PersistenceAdapter
 @RequiredArgsConstructor
 public class PricePersistenceAdapter implements PriceRepositoryPort {
-    private SpringDataJpaPrice springDataJpaPrice;
-    private PriceMapper priceMapper;
+    private final SpringDataJpaPrice springDataJpaPrice;
+    private final PriceMapper priceMapper;
 
     @Override
     public PriceModel save(PriceModel task) {
