@@ -4,7 +4,7 @@ import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.test.cap.pricecontrolcenter.infraestructure.out.entity.PricesEntity;
 
 public class PriceMapper {
-    public static PricesEntity toEntity(PriceModel model) {
+    public  PricesEntity toEntity(PriceModel model) {
         return PricesEntity.builder()
                 .brandId(model.getBrandId())
                 .startDate(model.getStartDate())
@@ -17,7 +17,7 @@ public class PriceMapper {
                 .build();
     }
 
-    public static PriceModel toModel(PricesEntity entity) {
+    public  PriceModel toModel(PricesEntity entity) {
         return PriceModel.builder()
                 .brandId(entity.getBrandId())
                 .startDate(entity.getStartDate())
