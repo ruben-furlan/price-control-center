@@ -1,4 +1,4 @@
-package com.test.cap.pricecontrolcenter.infraestructure.out.adapter;
+package com.test.cap.pricecontrolcenter.infraestructure.adapter.out;
 
 import com.test.cap.pricecontrolcenter.common.PersistenceAdapter;
 import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
