@@ -1,7 +1,8 @@
-package com.test.cap.pricecontrolcenter.infraestructure.out.mapper;
+package com.test.cap.pricecontrolcenter.infraestructure.adapter.out.mapper;
 
 import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
-import com.test.cap.pricecontrolcenter.infraestructure.out.entity.PricesEntity;
+import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
+
 
 public class PriceMapper {
     public  PricesEntity toEntity(PriceModel model) {
