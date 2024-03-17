@@ -2,6 +2,7 @@ package com.test.cap.pricecontrolcenter.infraestructure.adapter.in.web.controlle
 
 
 import com.test.cap.pricecontrolcenter.domain.port.in.PriceUserCase;
+import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.mapper.PriceMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,6 +20,9 @@ class PriceControllerTest {
 
     @MockBean
     private PriceUserCase priceUserCase;
+
+    @MockBean
+    private PriceMapper priceMapper;
 
     @Test
     void testCreatePrice_InvalidRequest() throws Exception {
