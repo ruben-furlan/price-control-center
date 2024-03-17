@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/price-control-center")
 @RequiredArgsConstructor
-
 public class PriceController {
     private final PriceUserCase priceUserCase;
     @PostMapping()
