@@ -5,8 +5,11 @@ import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.test.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.test.cap.pricecontrolcenter.domain.port.in.PriceUserCase;
 import com.test.cap.pricecontrolcenter.domain.port.out.PriceRepositoryPort;
+import com.test.cap.pricecontrolcenter.infraestructure.exception.custom.PriceCreationException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +34,12 @@ public class PriceService implements PriceUserCase {
                 .currency(command.currency())
                 .build();
 
-        return this.priceRepositoryPort.save(priceModel);
+        return this.priceRepositoryPort.save(priceModel).orElseThrow(PriceCreationException::new);
     }
 
+    public Optional<PriceModel> findProductToApply(LocalDateTime applicationDate, Integer productId, Integer brandId) {
+        return this.priceRepositoryPort
+                .findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)
+                .flatMap(prices -> prices.stream().findFirst());
+    }
 }

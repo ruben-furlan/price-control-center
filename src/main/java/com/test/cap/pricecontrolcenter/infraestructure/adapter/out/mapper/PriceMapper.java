@@ -2,10 +2,18 @@ package com.test.cap.pricecontrolcenter.infraestructure.adapter.out.mapper;
 
 import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PriceMapper {
+
+
+    public List<PriceModel> ToPriceModel(List<PricesEntity> entities){
+       return entities.stream().map(this::toModel).collect(Collectors.toList());
+    }
+
     public  PricesEntity toEntity(PriceModel model) {
         return PricesEntity.builder()
                 .brandId(model.getBrandId())
