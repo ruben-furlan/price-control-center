@@ -1,15 +1,14 @@
-package com.test.cap.pricecontrolcenter.domain.model;
+package com.test.cap.pricecontrolcenter.infraestructure.adapter.out.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
+import jakarta.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
-public class PriceModel {
+public class ResponsePriceDTO {
     private Integer brandId;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
