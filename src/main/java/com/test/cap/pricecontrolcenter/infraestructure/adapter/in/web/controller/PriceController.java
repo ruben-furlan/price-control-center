@@ -3,6 +3,8 @@ package com.test.cap.pricecontrolcenter.infraestructure.adapter.in.web.controlle
 import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.test.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.test.cap.pricecontrolcenter.domain.port.in.PriceUserCase;
+import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.dto.ResponsePriceDTO;
+import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.mapper.PriceMapper;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -21,17 +23,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PriceController {
     private final PriceUserCase priceUserCase;
+    private final PriceMapper priceMapper;
+
     @PostMapping()
-    public ResponseEntity<PriceModel> create(@Valid @RequestBody() PriceCommand priceCommand) {
-        PriceModel response = this.priceUserCase.create(priceCommand);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<ResponsePriceDTO> create(@Valid @RequestBody() PriceCommand priceCommand) {
+
+        PriceModel priceModel = this.priceUserCase.create(priceCommand);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.priceMapper.fullResponsePriceDTO(priceModel));
     }
 
     @GetMapping()
-    public ResponseEntity<PriceModel> findProductToApply(@RequestParam(name = "application_date", required = true) LocalDateTime applicationDate,
-                                                         @RequestParam(name = "product_id", required = true) Integer productId,
-                                                         @RequestParam(name = "brand_id", required = true) Integer brandId) {
+    public ResponseEntity<ResponsePriceDTO> findProductToApply(@RequestParam(name = "application_date", required = true) LocalDateTime applicationDate,
+                                                               @RequestParam(name = "product_id", required = true) Integer productId,
+                                                               @RequestParam(name = "brand_id", required = true) Integer brandId) {
+
         Optional<PriceModel> priceModelOpt = this.priceUserCase.findProductToApply(applicationDate, productId, brandId);
-        return priceModelOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+
+        return priceModelOpt.map(this.priceMapper::lightResponsePriceDTO).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
 }
