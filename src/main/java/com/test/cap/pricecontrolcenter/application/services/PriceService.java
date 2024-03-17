@@ -37,7 +37,7 @@ public class PriceService implements PriceUserCase {
         return this.priceRepositoryPort.save(priceModel).orElseThrow(PriceCreationException::new);
     }
 
-    public Optional<PriceModel> findProductToApply(LocalDateTime applicationDate, Integer productId, Integer brandId) {
+    public Optional<PriceModel> findBrandAndProductToApply(LocalDateTime applicationDate, Integer productId, Integer brandId) {
         return this.priceRepositoryPort
                 .findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)
                 .flatMap(prices -> prices.stream().findFirst());

@@ -34,11 +34,11 @@ public class PriceController {
     }
 
     @GetMapping()
-    public ResponseEntity<ResponsePriceDTO> findProductToApply(@RequestParam(name = "application_date", required = true) LocalDateTime applicationDate,
+    public ResponseEntity<ResponsePriceDTO> findBrandAndProductToApply(@RequestParam(name = "application_date", required = true) LocalDateTime applicationDate,
                                                                @RequestParam(name = "product_id", required = true) Integer productId,
                                                                @RequestParam(name = "brand_id", required = true) Integer brandId) {
 
-        Optional<PriceModel> priceModelOpt = this.priceUserCase.findProductToApply(applicationDate, productId, brandId);
+        Optional<PriceModel> priceModelOpt = this.priceUserCase.findBrandAndProductToApply(applicationDate, productId, brandId);
 
         return priceModelOpt.map(this.priceMapper::lightResponsePriceDTO).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
