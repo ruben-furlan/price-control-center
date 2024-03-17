@@ -13,7 +13,7 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 public class PersistenceConfig {
 
     private static final String ORG_H_2_DRIVER = "org.h2.Driver";
-    private static final String JDBC_H_2_MEM_TESTDB = "jdbc:h2:mem:testdb";
+    private static final String DB_JDBC_H_2_MEM_TEST = "jdbc:h2:mem:testdb";
     private static  final String DB_INIT_STRUCTURE = "db/init_structure.sql";
     private static  final String DB_DATA = "db/data.sql";
     //default value
@@ -22,10 +22,11 @@ public class PersistenceConfig {
 
 
     @Profile("test")
+    @Bean
     public DataSource testDataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName(ORG_H_2_DRIVER);
-        dataSourceBuilder.url(JDBC_H_2_MEM_TESTDB); // Cambio en la URL
+        dataSourceBuilder.url(DB_JDBC_H_2_MEM_TEST);
         dataSourceBuilder.username(DB_USER_NAME);
         dataSourceBuilder.password(DB_PASS);
         return dataSourceBuilder.build();
