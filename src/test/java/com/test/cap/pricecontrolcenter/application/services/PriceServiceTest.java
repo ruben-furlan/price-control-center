@@ -40,10 +40,10 @@ class PriceServiceTest {
                 "EUR" // currency
         );
         PriceModel priceModel = PriceModel.builder().build();
-        when(priceRepositoryPort.save(any())).thenReturn(Optional.of(priceModel));
+        when(this.priceRepositoryPort.save(any())).thenReturn(Optional.of(priceModel));
 
         // Act
-        PriceModel createdPriceModel = priceService.create(command);
+        PriceModel createdPriceModel = this.priceService.create(command);
 
         // Assert
         assertNotNull(createdPriceModel);
