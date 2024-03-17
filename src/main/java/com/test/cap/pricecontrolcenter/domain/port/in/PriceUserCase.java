@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface PriceUserCase {
     PriceModel create (PriceCommand priceModel);
-    public Optional<PriceModel> findProductToApply(LocalDateTime applicationDate, Integer productId, Integer brandId);
+    Optional<PriceModel> findBrandAndProductToApply(LocalDateTime applicationDate, Integer productId, Integer brandId);
 
 }
