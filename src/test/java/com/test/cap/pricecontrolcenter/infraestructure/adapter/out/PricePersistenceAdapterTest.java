@@ -4,23 +4,21 @@ import com.test.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
 import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.mapper.PriceMapper;
 import com.test.cap.pricecontrolcenter.infraestructure.adapter.out.repositorty.SpringDataJpaPrice;
-
-import java.util.stream.IntStream;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class PricePersistenceAdapterTest {
@@ -36,6 +34,7 @@ class PricePersistenceAdapterTest {
 
     @Test
     void save_SuccessfullySaved() {
+        // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel priceModel = PriceModel.builder()
                 .brandId(1)
@@ -74,7 +73,7 @@ class PricePersistenceAdapterTest {
 
     @Test
     void findByDateProductAndBrandOrderByPriorityDesc_FoundPrices() {
-
+        // Given
         LocalDateTime startDate = LocalDateTime.of(2022, 3, 17, 12, 0);
         LocalDateTime endDate = LocalDateTime.of(2022, 3, 18, 12, 0);
         LocalDateTime applicationDate = LocalDateTime.now();

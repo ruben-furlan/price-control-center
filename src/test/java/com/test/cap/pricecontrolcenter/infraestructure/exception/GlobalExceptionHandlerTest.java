@@ -24,6 +24,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleMissingServletRequestParameterException() {
+        // Given
         String parameterName = "parameterName";
         String expectedMessage = "Missing request parameters: " + parameterName;
         Mockito.when(this.missingServletRequestParameterException.getParameterName()).thenReturn(parameterName);
@@ -38,6 +39,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handlePriceCreationException() {
+        // Given
         PriceCreationException priceCreationException = new PriceCreationException();
 
         // Act

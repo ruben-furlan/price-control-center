@@ -16,7 +16,7 @@ class PriceMapperTest {
 
     @Test
     void testToPriceModel() {
-        // Arrange
+        // Given
         PricesEntity entity = PricesEntity.builder()
                 .brandId(1)
                 .startDate(LocalDateTime.now())
@@ -46,7 +46,7 @@ class PriceMapperTest {
 
     @Test
     void testToEntity() {
-        // Arrange
+        // Given
         PriceModel model = PriceModel.builder()
                 .brandId(1)
                 .startDate(LocalDateTime.now())
@@ -74,7 +74,7 @@ class PriceMapperTest {
 
     @Test
     void testToModel() {
-        // Arrange
+        // Given
         PricesEntity entity = PricesEntity.builder()
                 .brandId(1)
                 .startDate(LocalDateTime.now())
@@ -102,7 +102,7 @@ class PriceMapperTest {
 
     @Test
     void testFullResponsePriceDTO() {
-        // Arrange
+        // Given
         PriceModel model = PriceModel.builder()
                 .brandId(1)
                 .startDate(LocalDateTime.now())
@@ -130,7 +130,7 @@ class PriceMapperTest {
 
     @Test
     void testLightResponsePriceDTO() {
-        // Arrange
+        // Given
         PriceModel model = PriceModel.builder()
                 .brandId(1)
                 .startDate(LocalDateTime.now())
