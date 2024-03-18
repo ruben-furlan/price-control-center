@@ -28,18 +28,7 @@ Consultar Precio:
 tips-fecha-formato: "2020-06-14T12:30:00"
 
 ```javascript
-curl --location --request GET 'http://localhost:8080/v1/price-control-center?application_date=2020-06-14T15%3A59%3A59&product_id=35455&brand_id=1' \
---header 'Content-Type: application/json' \
---data '{
-    "brand_id": 1,
-   "start_date": "2024-03-16T10:30:00",
-    "end_date": "2024-03-26T10:30:00",
-    "price_list": -1,
-    "product_id": 2,
-    "priority": 4,
-    "price": 33.40
-    
-}'
+curl --location 'http://localhost:8080/v1/price-control-center?application_date=2020-06-14T15%3A59%3A59&product_id=35455&brand_id=1'
 ```
 
 
