@@ -59,4 +59,20 @@ Compila y ejecuta la aplicación usando Mave
 mvn spring-boot:run
 ```
 
+Test unitarios
+```bash
+cd price-control-center
+```
 
+```bash
+mvn test
+```
+
+Test de integracion 
+```bash
+cd price-control-center
+```
+
+```bash
+mvn failsafe:integration-test
+```
