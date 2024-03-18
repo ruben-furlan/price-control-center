@@ -56,6 +56,3 @@ mvn spring-boot:run
 ```
 
 
-Asegurate de tener la jdk de java21
-https://www.oracle.com/java/technologies/downloads/#jdk21-linux
-
