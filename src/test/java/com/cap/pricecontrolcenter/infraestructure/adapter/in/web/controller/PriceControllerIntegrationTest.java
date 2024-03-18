@@ -1,7 +1,7 @@
 package com.cap.pricecontrolcenter.infraestructure.adapter.in.web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.cap.pricecontrolcenter.PriceControlCenterApplication;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PriceControlCenterApplication.class)
@@ -30,22 +31,33 @@ public class PriceControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testPriceController() throws Exception {
+    void testPriceController_case_001() throws Exception {
         // Test 1: petición a las 10:00 del día 14 del producto 35455 para la brand 1 (ZARA)
         performAndVerify("2020-06-14T10:00:00", 35455, 1,1,BigDecimal.valueOf(35.50));
-
+    }
+    @Test
+    void testPriceController_case_002() throws Exception {
         // Test 2: petición a las 16:00 del día 14 del producto 35455 para la brand 1 (ZARA)
         performAndVerify("2020-06-14T16:00:00", 35455, 1,2,BigDecimal.valueOf(24.25));
+    }
 
+    @Test
+    void testPriceController_case_003() throws Exception {
         // Test 3: petición a las 21:00 del día 14 del producto 35455 para la brand 1 (ZARA)
         performAndVerify("2020-06-14T21:00:00", 35455, 1,1,BigDecimal.valueOf(35.50));
-
+    }
+    @Test
+    void testPriceController_case_004() throws Exception {
         // Test 4: petición a las 10:00 del día 15 del producto 35455 para la brand 1 (ZARA)
         performAndVerify("2020-06-15T10:00:00", 35455, 1,3,BigDecimal.valueOf(30.50));
 
+    }
+    @Test
+    void testPriceController_case_005() throws Exception {
         // Test 5: petición a las 21:00 del día 16 del producto 35455 para la brand 1 (ZARA)
         performAndVerify("2020-06-16T21:00:00", 35455, 1,4,BigDecimal.valueOf(38.45));
     }
+
 
     private void performAndVerify(String applicationDate, Integer productId, Integer brandId, Integer priceList, BigDecimal price) throws Exception {
         MvcResult result = mockMvc.perform(get("/v1/price-control-center")
