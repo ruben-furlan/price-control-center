@@ -32,6 +32,10 @@ curl --location 'http://localhost:8080/v1/price-control-center?application_date=
 ```
 
 
+```javascript
+Acceso a la base H2 en Memoria:
+http://localhost:8080/h2-console
+```
 
 
 
