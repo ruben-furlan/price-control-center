@@ -97,7 +97,7 @@ class PriceMapperTest {
     }
 
     @Test
-    void case_005_testLightResponsePriceDTO() {
+    public void case_005_testLightResponsePriceDTO() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel model = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
