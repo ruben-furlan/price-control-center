@@ -3,6 +3,7 @@ package com.cap.pricecontrolcenter.infraestructure.adapter.out.mapper;
 import com.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.dto.ResponsePriceDTO;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
+import com.cap.pricecontrolcenter.uils.TestHelper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -15,18 +16,10 @@ class PriceMapperTest {
     private final PriceMapper priceMapper = new PriceMapper();
 
     @Test
-    void testToPriceModel() {
+    void case_001_testToPriceModel() {
         // Given
-        PricesEntity entity = PricesEntity.builder()
-                .brandId(1)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(1))
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build();
+        LocalDateTime now = LocalDateTime.now();
+        PricesEntity entity = TestHelper.generatePriceEntityWithStartAndEndDate(now, now.plusDays(1));
         List<PricesEntity> entities = Collections.singletonList(entity);
 
         // Act
@@ -45,18 +38,10 @@ class PriceMapperTest {
     }
 
     @Test
-    void testToEntity() {
+    void case_002_testToEntity() {
         // Given
-        PriceModel model = PriceModel.builder()
-                .brandId(1)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(1))
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build();
+        LocalDateTime now = LocalDateTime.now();
+        PriceModel model = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
 
         // Act
         PricesEntity entity = this.priceMapper.toEntity(model);
@@ -73,18 +58,10 @@ class PriceMapperTest {
     }
 
     @Test
-    void testToModel() {
+    void case_003_testToModel() {
         // Given
-        PricesEntity entity = PricesEntity.builder()
-                .brandId(1)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(1))
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build();
+        LocalDateTime now = LocalDateTime.now();
+        PricesEntity entity = TestHelper.generatePriceEntityWithStartAndEndDate(now, now.plusDays(1));
 
         // Act
         PriceModel model = this.priceMapper.toModel(entity);
@@ -101,18 +78,10 @@ class PriceMapperTest {
     }
 
     @Test
-    void testFullResponsePriceDTO() {
+    void case_004_testFullResponsePriceDTO() {
         // Given
-        PriceModel model = PriceModel.builder()
-                .brandId(1)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(1))
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build();
+        LocalDateTime now = LocalDateTime.now();
+        PriceModel model = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
 
         // Act
         ResponsePriceDTO responsePriceDTO = this.priceMapper.fullResponsePriceDTO(model);
@@ -129,16 +98,10 @@ class PriceMapperTest {
     }
 
     @Test
-    void testLightResponsePriceDTO() {
+    void case_005_testLightResponsePriceDTO() {
         // Given
-        PriceModel model = PriceModel.builder()
-                .brandId(1)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(1))
-                .priceList(1)
-                .productId(35455)
-                .price(BigDecimal.valueOf(35.50))
-                .build();
+        LocalDateTime now = LocalDateTime.now();
+        PriceModel model = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
 
         // Act
         ResponsePriceDTO responsePriceDTO = this.priceMapper.lightResponsePriceDTO(model);

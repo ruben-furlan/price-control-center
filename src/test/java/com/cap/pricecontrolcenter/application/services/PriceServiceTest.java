@@ -4,6 +4,7 @@ import com.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.cap.pricecontrolcenter.domain.port.out.PriceRepositoryPort;
 import com.cap.pricecontrolcenter.infraestructure.exception.custom.PriceCreationException;
+import com.cap.pricecontrolcenter.uils.TestHelper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -31,9 +32,9 @@ class PriceServiceTest {
     private PriceService priceService;
 
     @Test
-    void create_SuccessfullyCreated() {
+    void case_001_createSuccessfullyCreated() {
         //Given
-        PriceCommand command = generateCommand();
+        PriceCommand command = TestHelper.generateDefaultCommand();
         PriceModel priceModel = PriceModel.builder().build();
         when(this.priceRepositoryPort.save(any())).thenReturn(Optional.of(priceModel));
 
@@ -45,9 +46,9 @@ class PriceServiceTest {
     }
 
     @Test
-    void create_UnsuccessfulSave() {
+    void case_002_createUnsuccessfulSave() {
         //Given
-        PriceCommand command = generateCommand();
+        PriceCommand command =TestHelper.generateDefaultCommand();
         when(this.priceRepositoryPort.save(any())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -55,7 +56,7 @@ class PriceServiceTest {
     }
 
     @Test
-    void findBrandAndProductToApply() {
+    void case_003_findBrandAndProductToApply() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
@@ -72,7 +73,7 @@ class PriceServiceTest {
     }
 
     @Test
-    void findBrandAndProductToApply_is_empty() {
+    void case_004_findBrandAndProductToApplyNoFoundPriceEntity() {
         // given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
@@ -87,17 +88,4 @@ class PriceServiceTest {
     }
 
 
-    private static PriceCommand generateCommand() {
-        PriceCommand command = new PriceCommand(
-                1,
-                LocalDateTime.of(2020, 6, 14, 0, 0), // startDate
-                LocalDateTime.of(2020, 12, 31, 23, 59, 59), // endDate
-                1,
-                35455,
-                0,
-                BigDecimal.valueOf(35.50), // price
-                "EUR"
-        );
-        return command;
-    }
 }

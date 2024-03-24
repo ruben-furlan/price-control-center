@@ -1,6 +1,7 @@
 package com.cap.pricecontrolcenter.uils;
 
 import com.cap.pricecontrolcenter.domain.model.PriceModel;
+import com.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -60,5 +61,18 @@ public abstract class TestHelper {
         assertEquals(entity.getCurrency(), model.getCurrency(), "Currency mismatch");
     }
 
+
+    public static PriceCommand generateDefaultCommand() {
+        return new PriceCommand(
+                1,
+                LocalDateTime.of(2020, 6, 14, 0, 0), // startDate
+                LocalDateTime.of(2020, 12, 31, 23, 59, 59), // endDate
+                1,
+                35455,
+                0,
+                BigDecimal.valueOf(35.50), // price
+                "EUR"
+        );
+    }
 
 }

@@ -35,7 +35,7 @@ class PricePersistenceAdapterTest {
     private PricePersistenceAdapter pricePersistenceAdapter;
 
     @Test
-    void save_SuccessfullySaved() {
+    void case_001_save_successFullySaved() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
@@ -56,7 +56,7 @@ class PricePersistenceAdapterTest {
     }
 
     @Test
-    void save_andReturnEntityNull() {
+    void case_002_save_andReturnEntityNotFound() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
@@ -76,7 +76,7 @@ class PricePersistenceAdapterTest {
     }
 
     @Test
-    void save_MappingCouldNotDone() {
+    void case_003_save_MappingCouldNotDone() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
@@ -98,7 +98,7 @@ class PricePersistenceAdapterTest {
 
 
     @Test
-    void findByDateProductAndBrandOrderByPriorityDesc_FoundPrices() {
+    void case_004_findByDateProductAndBrandOrderByPriorityDescFoundPrices() {
         // Given
         LocalDateTime startDate = LocalDateTime.of(2022, 3, 17, 12, 0);
         LocalDateTime endDate = LocalDateTime.of(2022, 3, 18, 12, 0);
@@ -124,7 +124,7 @@ class PricePersistenceAdapterTest {
 
 
     @Test
-    void findByDateProductAndBrandOrderByPriorityDesc_DifferentPriorities() {
+    void case_005_findByDateProductAndBrandOrderByPriorityDescDifferentPriorities() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
@@ -162,7 +162,7 @@ class PricePersistenceAdapterTest {
 
 
     @Test
-    void findByDateProductAndBrandOrderByPriorityDesc_notFoundPricesEntity() {
+    void case_006_findByDateProductAndBrandOrderByPriorityDescNotFoundPricesEntity() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
@@ -182,7 +182,7 @@ class PricePersistenceAdapterTest {
 
 
     @Test
-    void findByDateProductAndBrandOrderByPriorityDesc_NullList() {
+    void case_007_findByDateProductAndBrandOrderByPriorityDescNotFoundNullResponsePriceEntity() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
