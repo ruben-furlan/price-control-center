@@ -4,13 +4,16 @@ import com.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.mapper.PriceMapper;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.repositorty.SpringDataJpaPrice;
-import java.math.BigDecimal;
+import com.cap.pricecontrolcenter.uils.TestHelper;
+import com.cap.pricecontrolcenter.uils.TestInputHelper;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,36 +36,18 @@ class PricePersistenceAdapterTest {
     private PricePersistenceAdapter pricePersistenceAdapter;
 
     @Test
-    void save_SuccessfullySaved() {
+    public void case_001_save_successFullySaved() {
         // Given
         LocalDateTime now = LocalDateTime.now();
-        PriceModel priceModel = PriceModel.builder()
-                .brandId(1)
-                .startDate(now)
-                .endDate(now.plusDays(1))
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build();
-        PricesEntity pricesEntity = PricesEntity.builder()
-                .brandId(1)
-                .startDate(now)
-                .endDate(now.plusDays(1))
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build();
+        PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
+        PricesEntity pricesEntity = TestHelper.generatePriceEntityWithStartAndEndDate(now, now.plusDays(1));
 
         when(this.priceMapper.toEntity(priceModel)).thenReturn(pricesEntity);
         when(this.springDataJpaPrice.save(pricesEntity)).thenReturn(pricesEntity);
         when(this.priceMapper.toModel(pricesEntity)).thenReturn(priceModel);
 
         // Act
-        Optional<PriceModel> savedPriceModel = pricePersistenceAdapter.save(priceModel);
+        Optional<PriceModel> savedPriceModel = this.pricePersistenceAdapter.save(priceModel);
 
         // Assert
         assertEquals(Optional.of(priceModel), savedPriceModel);
@@ -72,56 +57,147 @@ class PricePersistenceAdapterTest {
     }
 
     @Test
-    void findByDateProductAndBrandOrderByPriorityDesc_FoundPrices() {
+    public void case_002_save_andReturnEntityNotFound() {
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+        PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
+        PricesEntity pricesEntity = TestHelper.generatePriceEntityWithStartAndEndDate(now, now.plusDays(1));
+
+        when(this.priceMapper.toEntity(priceModel)).thenReturn(pricesEntity);
+        when(this.springDataJpaPrice.save(pricesEntity)).thenReturn(null);
+
+        // Act
+        Optional<PriceModel> savedPriceModel = this.pricePersistenceAdapter.save(priceModel);
+
+        // Assert
+        assertEquals(Optional.empty(), savedPriceModel);
+        verify(this.priceMapper, times(1)).toEntity(priceModel);
+        verify(this.springDataJpaPrice, times(1)).save(pricesEntity);
+
+    }
+
+    @Test
+    public void case_003_save_MappingCouldNotDone() {
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+        PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
+        PricesEntity pricesEntity = TestHelper.generatePriceEntityWithStartAndEndDate(now, now.plusDays(1));
+
+        when(this.priceMapper.toEntity(priceModel)).thenReturn(pricesEntity);
+        when(this.springDataJpaPrice.save(pricesEntity)).thenReturn(pricesEntity);
+        when(this.priceMapper.toModel(pricesEntity)).thenReturn(null);
+
+        // Act
+        Optional<PriceModel> savedPriceModel = this.pricePersistenceAdapter.save(priceModel);
+
+        // Assert
+        assertEquals(Optional.empty(), savedPriceModel);
+        verify(this.priceMapper, times(1)).toEntity(priceModel);
+        verify(this.springDataJpaPrice, times(1)).save(pricesEntity);
+        verify(this.priceMapper, times(1)).toModel(pricesEntity);
+    }
+
+
+    @Test
+    public void case_004_findByDateProductAndBrandOrderByPriorityDescFoundPrices() {
         // Given
         LocalDateTime startDate = LocalDateTime.of(2022, 3, 17, 12, 0);
         LocalDateTime endDate = LocalDateTime.of(2022, 3, 18, 12, 0);
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 35455;
-        Integer brandId = 1;
-        List<PricesEntity> pricesEntities = Collections.singletonList((PricesEntity.builder()
-                .brandId(1)
-                .startDate(startDate)
-                .endDate(endDate)
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build()));
-        List<PriceModel> expectedPriceModels = Collections.singletonList(PriceModel.builder()
-                .brandId(1)
-                .startDate(startDate)
-                .endDate(endDate)
-                .priceList(1)
-                .productId(35455)
-                .priority(0)
-                .price(BigDecimal.valueOf(35.50))
-                .currency("EUR")
-                .build());
-        when(this.springDataJpaPrice.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId))
-                .thenReturn(pricesEntities);
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
+        List<PricesEntity> pricesEntities = TestHelper.generatePriceEntitiesWithStartAndEndDateList(startDate, endDate);
+        List<PriceModel> expectedPriceModels = TestHelper.generatePriceModelWithStartAndEndDateList(startDate, endDate);
+
+        when(this.springDataJpaPrice.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)).thenReturn(pricesEntities);
         when(this.priceMapper.ToPriceModel(pricesEntities)).thenReturn(expectedPriceModels);
 
         // Act
-        Optional<List<PriceModel>> foundPriceModels = pricePersistenceAdapter.findByDateProductAndBrandOrderByPriorityDesc(
-                applicationDate, productId, brandId);
+        Optional<List<PriceModel>> foundPriceModels = this.pricePersistenceAdapter.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
 
         // Assert
         assertEquals(Optional.of(expectedPriceModels), foundPriceModels);
         assertEquals(pricesEntities.size(), expectedPriceModels.size());
-        IntStream.range(0, pricesEntities.size())
-                .forEach(i -> {
-                    assertEquals(pricesEntities.get(i).getBrandId(), expectedPriceModels.get(i).getBrandId());
-                    assertEquals(pricesEntities.get(i).getStartDate(), expectedPriceModels.get(i).getStartDate());
-                    assertEquals(pricesEntities.get(i).getEndDate(), expectedPriceModels.get(i).getEndDate());
-                    assertEquals(pricesEntities.get(i).getPriceList(), expectedPriceModels.get(i).getPriceList());
-                    assertEquals(pricesEntities.get(i).getProductId(), expectedPriceModels.get(i).getProductId());
-                    assertEquals(pricesEntities.get(i).getPriority(), expectedPriceModels.get(i).getPriority());
-                    assertEquals(pricesEntities.get(i).getPrice(), expectedPriceModels.get(i).getPrice());
-                    assertEquals(pricesEntities.get(i).getCurrency(), expectedPriceModels.get(i).getCurrency());
-                });
+        IntStream.range(0, pricesEntities.size()).forEach(i -> TestHelper.assertPriceModelEqualsEntity(pricesEntities.get(i), expectedPriceModels.get(i)));
         verify(this.springDataJpaPrice, times(1)).findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
         verify(this.priceMapper, times(1)).ToPriceModel(pricesEntities);
     }
+
+
+    @Test
+    public void case_005_findByDateProductAndBrandOrderByPriorityDescDifferentPriorities() {
+        // Given
+        LocalDateTime applicationDate = LocalDateTime.now();
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
+        LocalDateTime now = LocalDateTime.now();
+        //  entities with different priorities
+        PricesEntity entityWithPriority0 = TestHelper.generatePriceEntityWithStartAndEndDateAndPriority(now, now.plusDays(1), 5);
+        PricesEntity entityWithPriority1 = TestHelper.generatePriceEntityWithStartAndEndDateAndPriority(now, now.plusDays(1), 6);
+        PricesEntity entityWithPriority2 = TestHelper.generatePriceEntityWithStartAndEndDateAndPriority(now, now.plusDays(1), 1);
+
+        //  expected models with correct order based on priorities
+        List<PriceModel> expectedPriceModels = Arrays.asList(
+                this.priceMapper.toModel(entityWithPriority2),
+                this.priceMapper.toModel(entityWithPriority1),
+                this.priceMapper.toModel(entityWithPriority0)
+        );
+
+        // Mock the repository to return entities with different priorities
+        List<PricesEntity> pricesEntities = Arrays.asList(entityWithPriority0, entityWithPriority1, entityWithPriority2);
+        when(this.springDataJpaPrice.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)).thenReturn(pricesEntities);
+        when(this.priceMapper.ToPriceModel(pricesEntities)).thenReturn(expectedPriceModels);
+
+        // Act
+        Optional<List<PriceModel>> foundPriceModels = this.pricePersistenceAdapter.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
+
+        // Assert
+        assertTrue(foundPriceModels.isPresent(), "Expected non-empty Optional");
+        assertEquals(expectedPriceModels.size(), foundPriceModels.get().size(), "Size mismatch");
+        IntStream.range(0, expectedPriceModels.size()).forEach(i -> {
+            assertEquals(expectedPriceModels.get(i), foundPriceModels.get().get(i), "Model mismatch at index " + i);
+        });
+        verify(this.springDataJpaPrice, times(1)).findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
+        verify(this.priceMapper, times(1)).ToPriceModel(pricesEntities);
+    }
+
+
+    @Test
+    public void case_006_findByDateProductAndBrandOrderByPriorityDescNotFoundPricesEntity() {
+        // Given
+        LocalDateTime applicationDate = LocalDateTime.now();
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
+
+        when(this.springDataJpaPrice.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)).thenReturn(Collections.emptyList());
+
+        // Act
+        Optional<List<PriceModel>> foundPriceModels = this.pricePersistenceAdapter.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
+
+
+        // Assert
+        assertTrue(foundPriceModels.isPresent(), "Expected non-empty Optional");
+        assertTrue(foundPriceModels.get().isEmpty(), "Expected empty List inside Optional");
+        verify(this.springDataJpaPrice, times(1)).findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
+    }
+
+
+    @Test
+    public void case_007_findByDateProductAndBrandOrderByPriorityDescNotFoundNullResponsePriceEntity() {
+        // Given
+        LocalDateTime applicationDate = LocalDateTime.now();
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
+        when(this.springDataJpaPrice.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)).thenReturn(null);
+
+        // Act
+        Optional<List<PriceModel>> foundPriceModels = this.pricePersistenceAdapter.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
+
+        // Assert
+        assertTrue(foundPriceModels.isPresent(), "Expected non-empty Optional");
+        assertTrue(foundPriceModels.get().isEmpty(), "Expected empty List inside Optional");
+        verify(this.springDataJpaPrice, times(1)).findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId);
+    }
+
+
 }

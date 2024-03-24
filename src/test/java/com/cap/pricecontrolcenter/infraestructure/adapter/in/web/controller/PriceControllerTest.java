@@ -1,53 +1,96 @@
 package com.cap.pricecontrolcenter.infraestructure.adapter.in.web.controller;
 
 
+import com.cap.pricecontrolcenter.domain.model.PriceModel;
+import com.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.cap.pricecontrolcenter.domain.port.in.PriceUserCase;
+import com.cap.pricecontrolcenter.infraestructure.adapter.out.dto.ResponsePriceDTO;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.mapper.PriceMapper;
+import com.cap.pricecontrolcenter.uils.TestHelper;
+import com.cap.pricecontrolcenter.uils.TestInputHelper;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-@WebMvcTest(PriceController.class)
+
+@ExtendWith(MockitoExtension.class)
 class PriceControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private PriceUserCase priceUserCase;
 
-    @MockBean
+    @Mock
     private PriceMapper priceMapper;
 
-    @Test
-    void testCreatePrice_InvalidRequest() throws Exception {
-        // Given
-        String invalidRequestJson = "{\"brandId\":null,\"startDate\":\"2024-03-21T12:00:00\",\"endDate\":\"2024-03-22T12:00:00\",\"priceList\":1,\"productId\":1,\"priority\":5,\"price\":10.5,\"currency\":\"USD\"}";
+    @InjectMocks
+    private PriceController priceController;
 
-        // When/Then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/v1/price-control-center")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidRequestJson)
-                )
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.brandId").value("El ID de la marca no puede ser nulo"));
+    @Test
+    public void case_001_createValidPriceCommandReturnsCreatedResponse() {
+        // Given
+        PriceCommand priceCommand = TestHelper.generateDefaultCommand();
+        LocalDateTime now = LocalDateTime.now();
+        PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
+        when(this.priceUserCase.create(priceCommand)).thenReturn(priceModel);
+        when(this.priceMapper.fullResponsePriceDTO(priceModel)).thenReturn(TestHelper.generateResponseDTOWithStartAndEndDate(now, now.plusDays(1), 1));
+
+        // When
+        ResponseEntity<ResponsePriceDTO> response = priceController.create(priceCommand);
+
+        // Then
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        verify(this.priceUserCase, times(1)).create(priceCommand);
+        verify(this.priceMapper, times(1)).fullResponsePriceDTO(priceModel);
     }
 
     @Test
-    void testCreatePrice_ok() throws Exception {
+    public void case_002_findBrandAndProductToApplyValidParametersReturnsOkResponseWithPriceDTO() {
         // Given
-        String validRequestJson = "{\"brand_id\":11,\"start_date\":\"2024-03-21T12:00:00\",\"end_date\":\"2024-03-22T12:00:00\",\"price_list\":1,\"product_id\":1,\"priority\":5,\"price\":10.5,\"currency\":\"USD\"}";
+        LocalDateTime applicationDate = LocalDateTime.now();
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
+        LocalDateTime now = LocalDateTime.now();
+        PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
+        when(this.priceUserCase.findBrandAndProductToApply(applicationDate, productId, brandId)).thenReturn(Optional.of(priceModel));
+        when(this.priceMapper.lightResponsePriceDTO(priceModel)).thenReturn(TestHelper.generateResponseDTOWithStartAndEndDate(now, now.plusDays(1), 1));
 
-        // When/Then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/v1/price-control-center")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(validRequestJson)
-                )
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+        // When
+        ResponseEntity<ResponsePriceDTO> response = this.priceController.findBrandAndProductToApply(applicationDate, productId, brandId);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        verify(this.priceUserCase, times(1)).findBrandAndProductToApply(applicationDate, productId, brandId);
+        verify(this.priceMapper, times(1)).lightResponsePriceDTO(priceModel);
     }
+
+    @Test
+    public void case_003_findBrandAndProductToApplyNoPriceFoundReturnsNoContentResponse() {
+        // Given
+        LocalDateTime applicationDate = LocalDateTime.now();
+        when(this.priceUserCase.findBrandAndProductToApply(applicationDate, TestInputHelper.RequestPriceController.PRODUCT_ID, TestInputHelper.RequestPriceController.BRAND_ID)).thenReturn(Optional.empty());
+
+        // When
+        ResponseEntity<ResponsePriceDTO> response = this.priceController.findBrandAndProductToApply(applicationDate, TestInputHelper.RequestPriceController.PRODUCT_ID, TestInputHelper.RequestPriceController.BRAND_ID);
+
+        // Then
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertNull(response.getBody());
+        verify(this.priceUserCase, times(1)).findBrandAndProductToApply(applicationDate, TestInputHelper.RequestPriceController.PRODUCT_ID, TestInputHelper.RequestPriceController.BRAND_ID);
+    }
+
+
 }
