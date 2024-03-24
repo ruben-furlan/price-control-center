@@ -3,12 +3,16 @@ package com.cap.pricecontrolcenter.application.services;
 import com.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.cap.pricecontrolcenter.domain.port.out.PriceRepositoryPort;
+import com.cap.pricecontrolcenter.infraestructure.exception.custom.PriceCreationException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,17 +32,8 @@ class PriceServiceTest {
 
     @Test
     void create_SuccessfullyCreated() {
-        // Arrange
-        PriceCommand command = new PriceCommand(
-                1, // brandId
-                LocalDateTime.of(2020, 6, 14, 0, 0), // startDate
-                LocalDateTime.of(2020, 12, 31, 23, 59, 59), // endDate
-                1, // priceList
-                35455, // productId
-                0, // priority
-                BigDecimal.valueOf(35.50), // price
-                "EUR" // currency
-        );
+        //Given
+        PriceCommand command = generateCommand();
         PriceModel priceModel = PriceModel.builder().build();
         when(this.priceRepositoryPort.save(any())).thenReturn(Optional.of(priceModel));
 
@@ -47,12 +42,21 @@ class PriceServiceTest {
 
         // Assert
         assertNotNull(createdPriceModel);
-        // Add more assertions as needed
+    }
+
+    @Test
+    void create_UnsuccessfulSave() {
+        //Given
+        PriceCommand command = generateCommand();
+        when(this.priceRepositoryPort.save(any())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(PriceCreationException.class, () -> this.priceService.create(command));
     }
 
     @Test
     void findBrandAndProductToApply() {
-        // Arrange
+        // Given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
         Integer brandId = 1;
@@ -65,5 +69,35 @@ class PriceServiceTest {
 
         // Assert
         assertEquals(Optional.of(expectedPrices.get(0)), result);
+    }
+
+    @Test
+    void findBrandAndProductToApply_is_empty() {
+        // given
+        LocalDateTime applicationDate = LocalDateTime.now();
+        Integer productId = 35455;
+        Integer brandId = 1;
+        when(this.priceRepositoryPort.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId))
+                .thenReturn(Optional.empty());
+        // Act
+        Optional<PriceModel> result = this.priceService.findBrandAndProductToApply(applicationDate, productId, brandId);
+
+        // Assert
+        assertTrue(result.isEmpty(), "Expected empty Optional");
+    }
+
+
+    private static PriceCommand generateCommand() {
+        PriceCommand command = new PriceCommand(
+                1,
+                LocalDateTime.of(2020, 6, 14, 0, 0), // startDate
+                LocalDateTime.of(2020, 12, 31, 23, 59, 59), // endDate
+                1,
+                35455,
+                0,
+                BigDecimal.valueOf(35.50), // price
+                "EUR"
+        );
+        return command;
     }
 }
