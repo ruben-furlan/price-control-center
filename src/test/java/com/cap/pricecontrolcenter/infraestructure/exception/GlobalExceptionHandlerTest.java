@@ -23,7 +23,7 @@ class GlobalExceptionHandlerTest {
 
 
     @Test
-    void handleMissingServletRequestParameterException() {
+    public void case_001_handleMissingServletRequestParameterException() {
         // Given
         String parameterName = "parameterName";
         String expectedMessage = "Missing request parameters: " + parameterName;
@@ -38,12 +38,12 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void handlePriceCreationException() {
+    public void case_002_handlePriceCreationException() {
         // Given
         PriceCreationException priceCreationException = new PriceCreationException();
 
         // Act
-        ResponseEntity<String> responseEntity =this. globalExceptionHandler.handlePriceCreationException(priceCreationException);
+        ResponseEntity<String> responseEntity = this.globalExceptionHandler.handlePriceCreationException(priceCreationException);
 
         // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
