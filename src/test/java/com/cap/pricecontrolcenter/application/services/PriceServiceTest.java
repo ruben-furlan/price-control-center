@@ -5,6 +5,7 @@ import com.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.cap.pricecontrolcenter.domain.port.out.PriceRepositoryPort;
 import com.cap.pricecontrolcenter.infraestructure.exception.custom.PriceCreationException;
 import com.cap.pricecontrolcenter.uils.TestHelper;
+import com.cap.pricecontrolcenter.uils.TestInputHelper;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -58,8 +59,8 @@ class PriceServiceTest {
     public void case_003_findBrandAndProductToApply() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 35455;
-        Integer brandId = 1;
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
         List<PriceModel> expectedPrices = Collections.singletonList(PriceModel.builder().build());
         when(this.priceRepositoryPort.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId))
                 .thenReturn(Optional.of(expectedPrices));
@@ -75,8 +76,8 @@ class PriceServiceTest {
     public void case_004_findBrandAndProductToApplyNoFoundPriceEntity() {
         // given
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 35455;
-        Integer brandId = 1;
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
         when(this.priceRepositoryPort.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId))
                 .thenReturn(Optional.empty());
         // Act

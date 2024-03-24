@@ -60,8 +60,8 @@ class PriceControllerTest {
     public void case_002_findBrandAndProductToApplyValidParametersReturnsOkResponseWithPriceDTO() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 12345;
-        Integer brandId = 1;
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
         LocalDateTime now = LocalDateTime.now();
         PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
         when(this.priceUserCase.findBrandAndProductToApply(applicationDate, productId, brandId)).thenReturn(Optional.of(priceModel));

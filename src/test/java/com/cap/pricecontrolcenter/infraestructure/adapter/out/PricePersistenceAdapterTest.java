@@ -5,6 +5,7 @@ import com.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntit
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.mapper.PriceMapper;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.repositorty.SpringDataJpaPrice;
 import com.cap.pricecontrolcenter.uils.TestHelper;
+import com.cap.pricecontrolcenter.uils.TestInputHelper;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -103,8 +104,8 @@ class PricePersistenceAdapterTest {
         LocalDateTime startDate = LocalDateTime.of(2022, 3, 17, 12, 0);
         LocalDateTime endDate = LocalDateTime.of(2022, 3, 18, 12, 0);
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 35455;
-        Integer brandId = 1;
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
         List<PricesEntity> pricesEntities = TestHelper.generatePriceEntitiesWithStartAndEndDateList(startDate, endDate);
         List<PriceModel> expectedPriceModels = TestHelper.generatePriceModelWithStartAndEndDateList(startDate, endDate);
 
@@ -124,11 +125,11 @@ class PricePersistenceAdapterTest {
 
 
     @Test
-    public  void case_005_findByDateProductAndBrandOrderByPriorityDescDifferentPriorities() {
+    public void case_005_findByDateProductAndBrandOrderByPriorityDescDifferentPriorities() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 35455;
-        Integer brandId = 1;
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
         LocalDateTime now = LocalDateTime.now();
         //  entities with different priorities
         PricesEntity entityWithPriority0 = TestHelper.generatePriceEntityWithStartAndEndDateAndPriority(now, now.plusDays(1), 5);
@@ -165,8 +166,8 @@ class PricePersistenceAdapterTest {
     public void case_006_findByDateProductAndBrandOrderByPriorityDescNotFoundPricesEntity() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 35455;
-        Integer brandId = 1;
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
 
         when(this.springDataJpaPrice.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)).thenReturn(Collections.emptyList());
 
@@ -185,9 +186,8 @@ class PricePersistenceAdapterTest {
     public void case_007_findByDateProductAndBrandOrderByPriorityDescNotFoundNullResponsePriceEntity() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
-        Integer productId = 35455;
-        Integer brandId = 1;
-
+        Integer productId = TestInputHelper.RequestPriceController.PRODUCT_ID;
+        Integer brandId = TestInputHelper.RequestPriceController.BRAND_ID;
         when(this.springDataJpaPrice.findByDateProductAndBrandOrderByPriorityDesc(applicationDate, productId, brandId)).thenReturn(null);
 
         // Act
