@@ -4,7 +4,6 @@ import com.cap.pricecontrolcenter.domain.model.PriceModel;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.dto.ResponsePriceDTO;
 import com.cap.pricecontrolcenter.infraestructure.adapter.out.entity.PricesEntity;
 import com.cap.pricecontrolcenter.uils.TestHelper;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +15,7 @@ class PriceMapperTest {
     private final PriceMapper priceMapper = new PriceMapper();
 
     @Test
-    void case_001_testToPriceModel() {
+    public void case_001_testToPriceModel() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PricesEntity entity = TestHelper.generatePriceEntityWithStartAndEndDate(now, now.plusDays(1));
@@ -38,7 +37,7 @@ class PriceMapperTest {
     }
 
     @Test
-    void case_002_testToEntity() {
+    public void case_002_testToEntity() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel model = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
@@ -58,7 +57,7 @@ class PriceMapperTest {
     }
 
     @Test
-    void case_003_testToModel() {
+    public void case_003_testToModel() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PricesEntity entity = TestHelper.generatePriceEntityWithStartAndEndDate(now, now.plusDays(1));
@@ -78,7 +77,7 @@ class PriceMapperTest {
     }
 
     @Test
-    void case_004_testFullResponsePriceDTO() {
+    public void case_004_testFullResponsePriceDTO() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel model = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));

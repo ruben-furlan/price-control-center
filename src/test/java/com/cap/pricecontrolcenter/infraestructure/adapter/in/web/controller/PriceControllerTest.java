@@ -24,8 +24,22 @@ class PriceControllerTest {
     @MockBean
     private PriceMapper priceMapper;
 
+
     @Test
-    void testCreatePrice_InvalidRequest() throws Exception {
+    void case_001testCreatePrice_ok() throws Exception {
+        // Given
+        String validRequestJson = "{\"brand_id\":11,\"start_date\":\"2024-03-21T12:00:00\",\"end_date\":\"2024-03-22T12:00:00\",\"price_list\":1,\"product_id\":1,\"priority\":5,\"price\":10.5,\"currency\":\"USD\"}";
+
+        // When/Then
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/v1/price-control-center")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validRequestJson)
+                )
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    void case_002_testCreatePrice_InvalidRequest() throws Exception {
         // Given
         String invalidRequestJson = "{\"brandId\":null,\"startDate\":\"2024-03-21T12:00:00\",\"endDate\":\"2024-03-22T12:00:00\",\"priceList\":1,\"productId\":1,\"priority\":5,\"price\":10.5,\"currency\":\"USD\"}";
 
@@ -38,16 +52,5 @@ class PriceControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.brandId").value("El ID de la marca no puede ser nulo"));
     }
 
-    @Test
-    void testCreatePrice_ok() throws Exception {
-        // Given
-        String validRequestJson = "{\"brand_id\":11,\"start_date\":\"2024-03-21T12:00:00\",\"end_date\":\"2024-03-22T12:00:00\",\"price_list\":1,\"product_id\":1,\"priority\":5,\"price\":10.5,\"currency\":\"USD\"}";
 
-        // When/Then
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/v1/price-control-center")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(validRequestJson)
-                )
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
 }

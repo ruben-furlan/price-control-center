@@ -5,7 +5,6 @@ import com.cap.pricecontrolcenter.domain.port.in.PriceCommand;
 import com.cap.pricecontrolcenter.domain.port.out.PriceRepositoryPort;
 import com.cap.pricecontrolcenter.infraestructure.exception.custom.PriceCreationException;
 import com.cap.pricecontrolcenter.uils.TestHelper;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +31,7 @@ class PriceServiceTest {
     private PriceService priceService;
 
     @Test
-    void case_001_createSuccessfullyCreated() {
+    public void case_001_createSuccessfullyCreated() {
         //Given
         PriceCommand command = TestHelper.generateDefaultCommand();
         PriceModel priceModel = PriceModel.builder().build();
@@ -46,9 +45,9 @@ class PriceServiceTest {
     }
 
     @Test
-    void case_002_createUnsuccessfulSave() {
+    public void case_002_createUnsuccessfulSave() {
         //Given
-        PriceCommand command =TestHelper.generateDefaultCommand();
+        PriceCommand command = TestHelper.generateDefaultCommand();
         when(this.priceRepositoryPort.save(any())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -56,7 +55,7 @@ class PriceServiceTest {
     }
 
     @Test
-    void case_003_findBrandAndProductToApply() {
+    public void case_003_findBrandAndProductToApply() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
@@ -73,7 +72,7 @@ class PriceServiceTest {
     }
 
     @Test
-    void case_004_findBrandAndProductToApplyNoFoundPriceEntity() {
+    public void case_004_findBrandAndProductToApplyNoFoundPriceEntity() {
         // given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
