@@ -56,7 +56,7 @@ class PricePersistenceAdapterTest {
     }
 
     @Test
-    void save_SpringDataJpaReturnsNull() {
+    void save_andReturnEntityNull() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
@@ -66,7 +66,7 @@ class PricePersistenceAdapterTest {
         when(this.springDataJpaPrice.save(pricesEntity)).thenReturn(null);
 
         // Act
-        Optional<PriceModel> savedPriceModel = pricePersistenceAdapter.save(priceModel);
+        Optional<PriceModel> savedPriceModel = this.pricePersistenceAdapter.save(priceModel);
 
         // Assert
         assertEquals(Optional.empty(), savedPriceModel);
@@ -76,7 +76,7 @@ class PricePersistenceAdapterTest {
     }
 
     @Test
-    void save_PriceMapperReturnsNull() {
+    void save_MappingCouldNotDone() {
         // Given
         LocalDateTime now = LocalDateTime.now();
         PriceModel priceModel = TestHelper.generatePriceModelWithStartAndEndDate(now, now.plusDays(1));
@@ -162,7 +162,7 @@ class PricePersistenceAdapterTest {
 
 
     @Test
-    void findByDateProductAndBrandOrderByPriorityDesc_EmptyList() {
+    void findByDateProductAndBrandOrderByPriorityDesc_notFoundPricesEntity() {
         // Given
         LocalDateTime applicationDate = LocalDateTime.now();
         Integer productId = 35455;
